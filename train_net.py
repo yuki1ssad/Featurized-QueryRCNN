@@ -128,3 +128,5 @@ if __name__ == "__main__":
         dist_url=args.dist_url,
         args=(args,),
     )
+
+# python3 -m debugpy --wait-for-client --listen 0.0.0.0:5678 ./train_net.py --config configs/queryrcnn.res50.100pro.3x.yaml

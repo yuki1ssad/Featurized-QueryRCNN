@@ -1,6 +1,6 @@
 MODEL:
   META_ARCHITECTURE: "QueryRCNN"
-  WEIGHTS: "ImageNetPretrained/torchvision/R-50.pkl"
+  WEIGHTS: "detectron2://ImageNetPretrained/torchvision/R-50.pkl"
   MASK_ON: False
   PIXEL_MEAN: [123.675, 116.280, 103.530]
   PIXEL_STD: [58.395, 57.120, 57.375]
@@ -35,7 +35,7 @@ MODEL:
     GIOU_WEIGHT: 2.
     CLASS_WEIGHT: 2.
 SOLVER:
-  IMS_PER_BATCH: 16
+  IMS_PER_BATCH: 8
   BASE_LR: 0.000025
   STEPS: (210000, 250000)
   MAX_ITER: 270000
