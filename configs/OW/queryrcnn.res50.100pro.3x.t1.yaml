@@ -1,0 +1,7 @@
+_BASE_: "../queryrcnn.res50.100pro.3x.yaml"
+DATASETS:
+  TRAIN: ('t1_voc_coco_2007_train', ) # t1_voc_coco_2007_train, t1_voc_coco_2007_ft
+  TEST: ('voc_coco_2007_test', )   # voc_coco_2007_test
+OWOD:
+  PREV_INTRODUCED_CLS: 0
+  CUR_INTRODUCED_CLS: 20
