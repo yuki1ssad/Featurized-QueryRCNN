@@ -58,6 +58,10 @@ def add_sparsercnn_config(cfg):
                                  [0, 256], [0, 192],
                                  [0, 192], [0, 96],
                                  [0, 10000])
+    # nms
+    cfg.TEST.USE_NMS = True
+    cfg.TEST.NMS_THRESHOLD = 0.6
+    
     cfg.MODEL.QueryRCNN = CN()
 
     cfg.MODEL.QueryRCNN.RCNNHead = 'rcnnhead'

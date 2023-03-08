@@ -9,7 +9,18 @@ from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import get_cfg
 from detectron2.data import build_detection_train_loader
 from detectron2.engine import DefaultTrainer, default_argument_parser, default_setup, launch
-from detectron2.evaluation import COCOEvaluator, verify_results
+# from detectron2.evaluation import COCOEvaluator, verify_results
+from detectron2.evaluation import (
+    CityscapesInstanceEvaluator,
+    CityscapesSemSegEvaluator,
+    COCOEvaluator,
+    COCOPanopticEvaluator,
+    DatasetEvaluators,
+    LVISEvaluator,
+    PascalVOCDetectionEvaluator,
+    SemSegEvaluator,
+    verify_results,
+)
 from detectron2.solver.build import maybe_add_gradient_clipping
 
 from queryrcnn import SparseRCNNDatasetMapper, add_sparsercnn_config
@@ -28,9 +39,10 @@ class Trainer(DefaultTrainer):
         For your own dataset, you can simply create an evaluator manually in your
         script and do not have to worry about the hacky if-else logic here.
         """
-        if output_folder is None:
-            output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
-        return COCOEvaluator(dataset_name, cfg, True, output_folder)
+        # if output_folder is None:
+        #     output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
+        # return COCOEvaluator(dataset_name, cfg, True, output_folder)
+        return PascalVOCDetectionEvaluator(dataset_name, cfg)
 
     @classmethod
     def build_train_loader(cls, cfg):

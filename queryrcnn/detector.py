@@ -11,6 +11,8 @@ from .util.box_ops import box_xyxy_to_cxcywh
 
 from .dense_heads import build_rpn_head
 
+from detectron2.layers import batched_nms
+
 __all__ = ["SparseRCNN"]
 
 
@@ -72,6 +74,11 @@ class QueryRCNN(nn.Module):
         pixel_mean = torch.Tensor(cfg.MODEL.PIXEL_MEAN).to(self.device).view(3, 1, 1)
         pixel_std = torch.Tensor(cfg.MODEL.PIXEL_STD).to(self.device).view(3, 1, 1)
         self.normalizer = lambda x: (x - pixel_mean) / pixel_std
+        
+        # nms
+        self.use_nms = cfg.TEST.USE_NMS
+        self.nms_threshold = cfg.TEST.NMS_THRESHOLD
+        
         self.to(self.device)
 
     def simple_test(self, batched_inputs):
@@ -209,6 +216,10 @@ class QueryRCNN(nn.Module):
                 labels_per_image = labels[topk_indices]
                 box_pred_per_image = box_pred_per_image.view(-1, 1, 4).repeat(1, self.num_classes, 1).view(-1, 4)
                 box_pred_per_image = box_pred_per_image[topk_indices]
+                
+                if self.use_nms:
+                    keep = batched_nms(box_pred_per_image, scores_per_image, labels_per_image, self.nms_threshold)
+                    box_pred_per_image, scores_per_image, labels_per_image = box_pred_per_image[keep], scores_per_image[keep], labels_per_image[keep]
 
                 result.pred_boxes = Boxes(box_pred_per_image)
                 result.scores = scores_per_image
